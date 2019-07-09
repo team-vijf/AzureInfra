@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+  - hosts:
+    - sslapi.arjen.io
+    - admindb.arjen.io
+    - admindb2.arjen.io
+    - app.arjen.io
+    secretName: letsencrypt-prod
+  rules:
+  - host: sslapi.arjen.io
+    http:
+      paths:
+      - backend:
+          serviceName: api
+          servicePort: 80
+        path: /
+  - host: admindb.arjen.io
+    http:
+      paths:
+      - backend:
+          serviceName: phppgadmin
+          servicePort: 80
+  - host: admindb2.arjen.io
+    http:
+      paths:
+      - backend:
+          serviceName: phppgadmin2
+          servicePort: 80
+  - host: app.arjen.io
+    http:
+      paths:
+      - backend:
+          serviceName: webapp
+          servicePort: 80
